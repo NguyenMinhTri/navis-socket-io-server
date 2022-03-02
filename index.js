@@ -28,27 +28,31 @@ io.on('connection', (socket) => {
   socket.on('push-button', msg => {
     io.emit('push-button', msg);
   });
-    socket.emit('welcome', socket.id);
-    /* Presenter */
-    socket.on('bufferHeader', function(packet){
-        // Buffer header can be saved on server so it can be passed to new user
-        bufferHeader = packet;
-        socket.broadcast.emit('bufferHeader', packet);
-        // speaker = Speaker(packet.data);
-    });
+  socket.emit('welcome', socket.id);
+  /* Presenter */
+  socket.on('bufferHeader', function(packet){
+      // Buffer header can be saved on server so it can be passed to new user
+      bufferHeader = packet;
+      socket.broadcast.emit('bufferHeader', packet);
+      // speaker = Speaker(packet.data);
+  });
 
-    // Broadcast the received buffer
-    socket.on('stream', function(packet){
-        socket.broadcast.emit('stream', packet);
-        // speaker.writeFile([packet[0], ...another packet[0]...]);
-    });
+  // Broadcast the received buffer
+  socket.on('stream', function(packet){
+      socket.broadcast.emit('stream', packet);
+      // speaker.writeFile([packet[0], ...another packet[0]...]);
+  });
 
-    // Send buffer header to new user
-    socket.on('requestBufferHeader', function(){
-        socket.emit('bufferHeader', bufferHeader);
-    });
+  // Send buffer header to new user
+  socket.on('requestBufferHeader', function(){
+      socket.emit('bufferHeader', bufferHeader);
+  });
 
-
+  var room = socket.handshake['query']['r_var'];
+  socket.join(room);
+  socket.on('navis', function(msg){
+    io.to(room).emit('navis', msg);
+  });
 });
 
 http.listen(port, () => {
