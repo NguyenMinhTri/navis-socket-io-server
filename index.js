@@ -20,6 +20,7 @@ app.get('/socket-io', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 var bufferHeader = null;
+
 io.on('connection', (socket) => {
 	console.log("hello");
   socket.on('chat message', msg => {
@@ -34,7 +35,7 @@ io.on('connection', (socket) => {
       // Buffer header can be saved on server so it can be passed to new user
       bufferHeader = packet;
       socket.broadcast.emit('bufferHeader', packet);
-      // speaker = Speaker(packet.data);
+    
   });
 
   // Broadcast the received buffer
@@ -47,10 +48,13 @@ io.on('connection', (socket) => {
   socket.on('requestBufferHeader', function(){
       socket.emit('bufferHeader', bufferHeader);
   });
-
+  socket.on("disconnect", (reason) => {
+    console.log(reason);
+  });
   var room = socket.handshake['query']['r_var'];
   socket.join(room);
   socket.on('navis', function(msg){
+    console.log("msg");
     io.to(room).emit('navis', msg);
   });
 });
