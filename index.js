@@ -5,7 +5,6 @@ const io = require('socket.io')(http, {
 	  origin: ['*']
   }
 });
-
 const { io : ioClient } = require("socket.io-client");
 const port = process.env.PORT || 3001;
 
@@ -69,4 +68,6 @@ io.on('connection', (socket) => {
   });
 });
 
-app.listen(3000);
+http.listen(port, () => {
+  console.log(`Socket.IO server running at http://localhost:${port}/`);
+});
