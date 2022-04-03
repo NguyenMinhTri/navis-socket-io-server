@@ -31,10 +31,7 @@ io.on('connection', (socket) => {
   socket.on('chat message', msg => {
     io.emit('chat message', msg);
   });
-  socket.on('navis', msg => {
-    console.log(msg);
-    io.emit('navis', msg);
-  });
+
   socket.on('push-button', msg => {
     io.emit('push-button', msg);
   });
