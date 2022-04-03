@@ -21,8 +21,37 @@ app.get('/socket-io', (req, res) => {
 });
 app.get('/api/testnoti2', (req, res) => {
   console.log('api/testnoti');
-  io.sockets.emit("navis", "hello world");
-  res.status(200).send("ok");
+ 
+        const io2 = require('socket.io-client');
+        const socket2 = io2.connect('https://navis-socket-io-server.herokuapp.com');
+
+        socket2.on('connect', () => {
+          socket2.emit('navis', 'Assistant'); //login as "Assistant"
+          console.log('Successfully connected!');
+        });
+         //start - socket io
+         var socket = require('socket.io-client').connect('https://navis-socket-io-server.herokuapp.com');
+ 
+         socket.on('connect', function(){
+             console.log('connected');
+                         
+             socket.on('login', function(data){
+                 console.log('login');
+                 socket.emit('new message', 'StartEngine'); //sends message to chat server
+             });
+             
+             socket.on('got message', function() {
+                 socket.disconnect();
+             });
+             
+             socket.emit('add user', 'Assistant'); //login as "Assistant"
+         });
+         //end - socket io
+ 
+         //start - response to google assistant
+ 
+  
+         res.status(200).send("ok");
 });
 var bufferHeader = null;
 
