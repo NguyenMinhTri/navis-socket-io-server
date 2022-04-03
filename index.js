@@ -21,7 +21,7 @@ app.get('/socket-io', (req, res) => {
 });
 app.get('/api/testnoti2', (req, res) => {
   console.log('api/testnoti');
-  io.sockets.emit("navis", "hello world");
+  io.sockets.emit(req.query.device, "hello world");
   res.status(200).send("ok");
 });
 var bufferHeader = null;
