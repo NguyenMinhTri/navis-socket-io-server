@@ -1,5 +1,7 @@
 const app = require('express')();
 const http = require('http').Server(app);
+var bodyParser = require('body-parser')
+var jsonParser = bodyParser.json()
 const io = require('socket.io')(http, {
   cors: {
 	  origin: ['*']
@@ -9,10 +11,8 @@ const { io : ioClient } = require("socket.io-client");
 const port = process.env.PORT || 3001;
 
 const cors = require('cors')({ origin: true });
-app.use(function(req, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        next();
-    });
+app.use(cors);
+
 app.get('/socket-io', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
@@ -22,9 +22,9 @@ app.get('/api/testnoti2', (req, res) => {
   res.status(200).send("ok");
 });
 
-app.post('/api/notification', (req, res) => {
+app.post('/api/notification',jsonParser, (req, res) => {
   console.log('api/noti');
-  console.log(JSON.stringify(req.body));
+  console.log(req.body)
   let deviceId = req.body.status;
   let title = req.body.title;
   let content = req.body.body;
