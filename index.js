@@ -24,8 +24,21 @@ app.get('/api/testnoti2', (req, res) => {
   io.sockets.emit(req.query.device, "hello world");
   res.status(200).send("ok");
 });
-var bufferHeader = null;
 
+app.post('/api/notification', (req, res) => {
+  console.log('api/noti');
+  let deviceId = req.body.status;
+  let title = req.body.title;
+  let content = req.body.body;
+  io.sockets.emit(deviceId, JSON.stringify({
+    deviceId:deviceId,
+    title:title,
+    content:content
+  }));
+  res.status(200).send("ok");
+});
+
+var bufferHeader = null;
 io.on('connection', (socket) => {
 	console.log("hello", socket.id);
   socket.on('chat message', msg => {
