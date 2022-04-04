@@ -11,9 +11,6 @@ const port = process.env.PORT || 3001;
 const cors = require('cors')({ origin: true });
 app.use(function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
-        res.header("Access-Control-Allow-Headers", "Content-Type");
-        res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
         next();
     });
 app.get('/socket-io', (req, res) => {
@@ -27,6 +24,7 @@ app.get('/api/testnoti2', (req, res) => {
 
 app.post('/api/notification', (req, res) => {
   console.log('api/noti');
+  console.log(JSON.stringify(req.body));
   let deviceId = req.body.status;
   let title = req.body.title;
   let content = req.body.body;
