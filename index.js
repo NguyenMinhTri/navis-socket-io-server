@@ -4,11 +4,11 @@ var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 const io = require('socket.io')(http, {
   cors: {
-	  origin: ['*']
+          origin: ['*']
   }
 });
 const { io : ioClient } = require("socket.io-client");
-const port = process.env.PORT || 3001;
+const port = 1881;
 
 const cors = require('cors')({ origin: true });
 app.use(cors);
@@ -35,10 +35,16 @@ app.post('/api/notification',jsonParser, (req, res) => {
   }));
   res.status(200).send("ok");
 });
-
+app.post('/api/alarm-sound',jsonParser, (req, res) => {
+  console.log('api/noti');
+  console.log(req.body)
+  let content = req.body.body;
+  io.sockets.emit("chat message",content);
+  res.status(200).send("ok");
+});
 var bufferHeader = null;
 io.on('connection', (socket) => {
-	console.log("hello", socket.id);
+        console.log("hello", socket.id);
   socket.on('chat message', msg => {
     io.emit('chat message', msg);
   });
@@ -52,7 +58,7 @@ io.on('connection', (socket) => {
       // Buffer header can be saved on server so it can be passed to new user
       bufferHeader = packet;
       socket.broadcast.emit('bufferHeader', packet);
-    
+
   });
 
   // Broadcast the received buffer
