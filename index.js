@@ -13,6 +13,14 @@ const port = 1881;
 const cors = require('cors')({ origin: true });
 app.use(cors);
 
+app.post('/api/add-new-device',jsonParser, (req, res) => {
+
+  let deviceId = req.body.email;
+  let content = req.body.content;
+ 
+  io.sockets.emit(deviceId, req.body.content);
+  res.status(200).send("ok");
+});
 app.get('/socket-io', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
